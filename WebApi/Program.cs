@@ -8,6 +8,7 @@ var configuration = builder.Configuration;
 var services = builder.Services;
 
 services.AddSingleton<ITaskStorage, TaskStorage>();
+services.AddSingleton<TaskService>();
 
 var app = builder.Build();
 app.UseRouting();
@@ -15,18 +16,18 @@ app.MapGet("/add",
     (
         [FromQuery] string name,
         [FromQuery] string desc,
-        [FromServices] ITaskStorage storage
+        [FromServices] TaskService taskService 
     ) =>
     {
-        Save(storage, name, desc);
+        taskService.Save(name, desc);
     });
 app.MapGet("/find",
     (
         [FromQuery] string name,
-        [FromServices] ITaskStorage storage
+        [FromServices] TaskService taskService
     ) =>
     {
-        var option = Find(storage, name);
+        var option = taskService.Find(name);
         return FSharpOption<MyTask>.get_IsSome(option) 
             ? option.Value 
             : null;

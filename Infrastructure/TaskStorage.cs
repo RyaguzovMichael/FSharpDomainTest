@@ -7,12 +7,12 @@ public sealed class TaskStorage : ITaskStorage
 {
     private readonly Dictionary<string, MyTask> _tasks = [];
 
-    public void SaveTask(MyTask task)
+    public void Save(MyTask task)
     {
         _tasks.Add(task.Name, task);
     }
 
-    public FSharpOption<MyTask> GetTask(string name)
+    public FSharpOption<MyTask> Get(string name)
     {
         return _tasks.TryGetValue(name, out var task)
             ? FSharpOption<MyTask>.Some(task)
