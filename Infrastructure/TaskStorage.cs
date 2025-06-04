@@ -1,18 +1,21 @@
-﻿using Domain;
+﻿using Microsoft.FSharp.Core;
+using static Domain.Tasks;
 
 namespace Infrastructure;
 
-public sealed class TaskStorage : Tasks.ITaskStorage
+public sealed class TaskStorage : ITaskStorage
 {
-    private readonly List<Tasks.MyTask> _tasks = [];
-    
-    public void SaveTask(Tasks.MyTask task)
+    private readonly Dictionary<string, MyTask> _tasks = [];
+
+    public void SaveTask(MyTask task)
     {
-        _tasks.Add(task);
+        _tasks.Add(task.Name, task);
     }
 
-    public Tasks.MyTask GetTask(string name)
+    public FSharpOption<MyTask> GetTask(string name)
     {
-        return _tasks.First(t => t.Name == name);
+        return _tasks.TryGetValue(name, out var task)
+            ? FSharpOption<MyTask>.Some(task)
+            : FSharpOption<MyTask>.None;
     }
 }

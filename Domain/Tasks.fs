@@ -4,15 +4,12 @@ type MyTask = { Name: string; Description: string }
 
 type ITaskStorage =
     abstract member SaveTask: MyTask -> unit
-    abstract member GetTask: string -> MyTask
-
-let Task name desc =
-    { Name = name; Description = desc }
-
+    abstract member GetTask: string -> option<MyTask>
+    
 let Save (storage: ITaskStorage) name desc =
-    Task name desc 
+    { Name = name; Description = desc } 
     |> storage.SaveTask
     
-let Find (storage: ITaskStorage) name =
+let Find (storage: ITaskStorage) name : option<MyTask> =
     name
     |> storage.GetTask
